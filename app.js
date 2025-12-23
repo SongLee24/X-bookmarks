@@ -44,6 +44,23 @@ const App = {
         });
     },
 
+    // 统一的身份验证检查函数
+    async getAuthPassword() {
+        // 1. 首先尝试从会话存储中获取
+        let savedPassword = sessionStorage.getItem('admin_pwd');
+        if (savedPassword) {
+            return savedPassword;
+        }
+
+        // 2. 如果没有，则弹出密码框
+        const password = await PasswordModal.verify();
+        if (!password) return null;
+
+        // 3. 验证成功后（在 add/remove 成功反馈后）我们会存入，
+        // 这里先返回给操作函数使用
+        return password;
+    },
+
     async handleAddSubmit() {
         const url = Modal.getValue();
         const id = Utils.extractTweetId(url);
@@ -54,12 +71,13 @@ const App = {
         }
 
         // 弹出密码框获取密码
-        const password = await PasswordModal.verify();
+        const password = await this.getAuthPassword();
         if (!password) return;
 
         const result = await Storage.add(url, id, password);
 
         if (result.error === 'auth') {
+            sessionStorage.removeItem('admin_pwd');
             alert('密码错误，操作未授权');
             return;
         }
@@ -69,6 +87,8 @@ const App = {
             return;
         }
 
+        // 验证成功，暂存密码
+        sessionStorage.setItem('admin_pwd', password);
 
         Modal.close();
         this.state.items = await Storage.getAll();
@@ -79,15 +99,18 @@ const App = {
     },
 
     async handleDelete(id) {
-        const password = await PasswordModal.verify();
+        const password = await this.getAuthPassword();
         if (!password) return;
 
         const success = await Storage.remove(id, password);
         if (!success) {
+            sessionStorage.removeItem('admin_pwd');
             alert('操作失败，请检查密码');
             return;
         }
 
+        // 验证成功，暂存密码
+        sessionStorage.setItem('admin_pwd', password);
         this.state.items = await Storage.getAll();
         const totalPages = Math.ceil(this.state.items.length / ITEMS_PER_PAGE);
         if (this.state.currentPage > totalPages && totalPages > 0) {
