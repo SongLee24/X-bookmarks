@@ -1,4 +1,6 @@
-import { kv } from '@vercel/kv';
+import { createClient } from "redis"
+
+const redis =  await createClient({ url: process.env.REDIS_URL }).connect();
 
 export default async function handler(req, res) {
     // 限制只能用 POST 请求
@@ -14,10 +16,10 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: 'Invalid data format' });
         }
 
-        await kv.set('x_bookmarks', tweets);
+        await redis.set('x_bookmarks', tweets);
         return res.status(200).json({ success: true });
     } catch (error) {
-        console.error('KV Save Error:', error);
+        console.error('Redis Save Error:', error);
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 }
