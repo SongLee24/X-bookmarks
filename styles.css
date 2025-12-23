@@ -1,0 +1,110 @@
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: #27272a;
+    border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #3f3f46;
+}
+
+/* Modal Open State */
+body.modal-open {
+    overflow: hidden;
+}
+
+/* Modal Animations */
+.modal-active #modal-backdrop {
+    opacity: 1;
+}
+
+.modal-active #modal-content {
+    opacity: 1;
+    transform: scale(100%);
+}
+
+/* Twitter Widget Overrides (Attempt to normalize width) */
+.twitter-tweet {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+}
+
+/* Skeleton Loader for Tweets */
+.tweet-skeleton {
+    width: 100%;
+    min-height: 250px;
+    background: #141415;
+    border: 1px solid #27272a;
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.sk-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.sk-avatar {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 9999px;
+    background: #27272a;
+}
+
+.sk-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.sk-line {
+    height: 0.75rem;
+    border-radius: 0.25rem;
+    background: #27272a;
+}
+
+.sk-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Delete Button on Hover */
+.tweet-container {
+    position: relative;
+    transition: transform 0.2s ease;
+}
+
+.delete-action {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.2s ease;
+}
+
+.tweet-container:hover .delete-action {
+    opacity: 1;
+    transform: scale(1);
+    top: -12px;
+    right: -12px;
+}

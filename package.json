@@ -1,0 +1,23 @@
+{
+  "name": "x-bookmarks",
+  "version": "1.0.0",
+  "description": "Personal Vercel Project for X posts' mark",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SongLee24/X-bookmarks.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SongLee24/X-bookmarks/issues"
+  },
+  "homepage": "https://github.com/SongLee24/X-bookmarks#readme",
+  "dependencies": {
+    "@vercel/kv": "^3.0.0"
+  }
+}
