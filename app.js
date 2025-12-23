@@ -3,7 +3,7 @@ import { Utils } from './utils.js';
 import { Modal, Pagination } from './ui_components.js';
 import { TweetManager } from './tweet_manager.js';
 
-const ITEMS_PER_PAGE = 5;
+const ITEMS_PER_PAGE = 6;
 
 const App = {
     state: {
