@@ -42,7 +42,7 @@ export const TweetManager = {
 
         const wrappers = tweets.map(tweet => {
             const wrapper = document.createElement('div');
-            wrapper.className = 'tweet-container relative w-full flex justify-center min-h-[100px] animate-slide-up';
+            wrapper.className = 'tweet-container relative w-full flex flex-col min-h-[100px] animate-slide-up';
             wrapper.style.animationDelay = '0ms'; // Staggering handled by browser mostly or can add manual delay
             
 
