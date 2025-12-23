@@ -1,6 +1,14 @@
 import { createClient } from "redis"
 
-const redis =  await createClient({ url: process.env.REDIS_URL }).connect();
+let redisClient;
+
+async function getRedisClient() {
+    if (!redisClient) {
+        redisClient = createClient({ url: process.env.REDIS_URL });
+        await redisClient.connect();
+    }
+    return redisClient;
+}
 
 export default async function handler(req, res) {
     // 限制只能用 POST 请求
@@ -16,7 +24,9 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: 'Invalid data format' });
         }
 
-        await redis.set('x_bookmarks', tweets);
+        const client = await getRedisClient();
+        // Redis 只能存字符串，必须序列化
+        await client.set('x_bookmarks', JSON.stringify(tweets));
         return res.status(200).json({ success: true });
     } catch (error) {
         console.error('Redis Save Error:', error);

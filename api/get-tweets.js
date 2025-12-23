@@ -1,13 +1,25 @@
 import { createClient } from "redis"
 
-const redis =  await createClient({ url: process.env.REDIS_URL }).connect();
+// 在函数外声明变量，实现跨请求重用连接
+let redisClient;
+
+async function getRedisClient() {
+    if (!redisClient) {
+        redisClient = createClient({ url: process.env.REDIS_URL });
+        redisClient.on('error', err => console.error('Redis Client Error', err));
+        await redisClient.connect();
+    }
+    return redisClient;
+}
 
 export default async function handler(req, res) {
     try {
         // 显式设置缓存控制，防止浏览器由于 Vercel 边缘缓存导致数据不更新
         res.setHeader('Cache-Control', 'no-store, max-age=0');
+        const client = await getRedisClient();
 
-        const tweets = await redis.get('x_bookmarks') || [];
+        const data = await client.get('x_bookmarks');
+        const tweets = data ? JSON.parse(data) : [];
         return res.status(200).json(tweets);
     } catch (error) {
         console.error('Redis Get Error:', error);
