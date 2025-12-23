@@ -1,5 +1,3 @@
-const KEY = 'x_bookmarks_v1';
-
 // storage.js - 适配 Vercel KV 接口
 export const Storage = {
     // 从后端获取所有推文
