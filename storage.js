@@ -13,7 +13,7 @@ export const Storage = {
     },
 
     // 添加新推文并同步到后端
-    async add(url, id) {
+    async add(url, id, password) {
         try {
             const current = await this.getAll();
 
@@ -33,10 +33,11 @@ export const Storage = {
             const response = await fetch('/api/save-tweets', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(updated)
+                body: JSON.stringify({tweets: updated, password})
             });
 
-            if (!response.ok) throw new Error('Failed to save');
+            if (response.status === 401) return { success: false, error: 'auth' };
+            if (!response.ok) return { success: false, error: 'server' };
             return { success: true };
         } catch (error) {
             console.error('Storage Error:', error);
@@ -45,20 +46,22 @@ export const Storage = {
     },
 
     // 删除推文并同步到后端
-    async remove(id) {
+    async remove(id, password) {
         try {
             const current = await this.getAll();
             const updated = current.filter(item => item.id !== id);
 
-            await fetch('/api/save-tweets', {
+            const response = await fetch('/api/save-tweets', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(updated)
+                body: JSON.stringify({ tweets: updated, password })
             });
-            return true;
+
+            if (response.status === 401) return { success: false, error: 'auth' };
+            return { success: response.ok };
         } catch (error) {
             console.error('Storage Error:', error);
-            return false;
+            return { success: false, error: 'server' };
         }
     }
 };

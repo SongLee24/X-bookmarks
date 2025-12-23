@@ -1,6 +1,6 @@
 import { Storage } from './storage.js';
 import { Utils } from './utils.js';
-import { Modal, Pagination } from './ui_components.js';
+import { Modal, Pagination, PasswordModal } from './ui_components.js';
 import { TweetManager } from './tweet_manager.js';
 
 const ITEMS_PER_PAGE = 9;
@@ -27,6 +27,7 @@ const App = {
             'page-indicator', 
             (dir) => this.changePage(dir)
         );
+        PasswordModal.init();
 
 
         this.render();
@@ -52,8 +53,18 @@ const App = {
             return;
         }
 
-        const success = await Storage.add(url, id);
-        if (!success) {
+        // 弹出密码框获取密码
+        const password = await PasswordModal.verify();
+        if (!password) return;
+
+        const result = await Storage.add(url, id, password);
+
+        if (result.error === 'auth') {
+            alert('密码错误，操作未授权');
+            return;
+        }
+
+        if (!result.success) {
             Modal.showError('This tweet is already in your collection');
             return;
         }
@@ -68,10 +79,16 @@ const App = {
     },
 
     async handleDelete(id) {
-        await Storage.remove(id);
-        this.state.items = await Storage.getAll();
-        
+        const password = await PasswordModal.verify();
+        if (!password) return;
 
+        const success = await Storage.remove(id, password);
+        if (!success) {
+            alert('操作失败，请检查密码');
+            return;
+        }
+
+        this.state.items = await Storage.getAll();
         const totalPages = Math.ceil(this.state.items.length / ITEMS_PER_PAGE);
         if (this.state.currentPage > totalPages && totalPages > 0) {
             this.state.currentPage = totalPages;

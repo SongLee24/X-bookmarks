@@ -1,4 +1,5 @@
-import { createClient } from "redis"
+import { createClient } from "redis";
+import bcrypt from 'bcryptjs';
 
 let redisClient;
 
@@ -17,9 +18,15 @@ export default async function handler(req, res) {
     }
 
     try {
-        const tweets = req.body;
+        const { tweets, password } = req.body;
 
-        // 校验数据是否为数组
+        // 1. 验证密码
+        const hash = process.env.ADMIN_PASSWORD_HASH;
+        if (!password || !bcrypt.compareSync(password, hash)) {
+            return res.status(401).json({ error: 'Unauthorized: Incorrect password' });
+        }
+
+        // 2. 校验数据是否为数组
         if (!Array.isArray(tweets)) {
             return res.status(400).json({ error: 'Invalid data format' });
         }

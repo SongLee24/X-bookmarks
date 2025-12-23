@@ -80,3 +80,48 @@ export const Pagination = {
         }
     }
 };
+
+export const PasswordModal = {
+    init() {
+        this.el = document.getElementById('password-modal');
+        this.input = document.getElementById('admin-password');
+        this.error = document.getElementById('pwd-error');
+        this.confirmBtn = document.getElementById('pwd-confirm');
+        this.cancelBtn = document.getElementById('pwd-cancel');
+    },
+
+    // 使用 Promise 封装，方便在 app.js 中使用 await
+    verify() {
+        return new Promise((resolve) => {
+            this.el.classList.remove('hidden');
+            this.el.classList.add('flex');
+            this.input.value = '';
+            this.input.focus();
+            this.error.classList.add('hidden');
+
+            const handleConfirm = () => {
+                resolve(this.input.value);
+                this.close();
+            };
+
+            const handleCancel = () => {
+                resolve(null);
+                this.close();
+            };
+
+            this.confirmBtn.onclick = handleConfirm;
+            this.cancelBtn.onclick = handleCancel;
+            this.input.onkeydown = (e) => { if(e.key === 'Enter') handleConfirm(); };
+        });
+    },
+
+    showError() {
+        this.error.classList.remove('hidden');
+        this.input.classList.add('border-danger');
+    },
+
+    close() {
+        this.el.classList.add('hidden');
+        this.el.classList.remove('flex');
+    }
+};

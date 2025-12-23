@@ -65,6 +65,20 @@
         </button>
     </header>
 
+    <div id="password-modal" class="fixed inset-0 z-[60] hidden items-center justify-center">
+        <div id="pwd-backdrop" class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
+        <div class="relative w-full max-w-xs bg-[#18181b] border border-border rounded-xl p-6 mx-4">
+            <h3 class="text-sm font-medium text-primary mb-4">身份验证</h3>
+            <input type="password" id="admin-password" placeholder="请输入密码..."
+                   class="w-full bg-surface border border-border rounded-lg px-4 py-2 text-sm text-primary mb-4 focus:outline-none focus:border-accent">
+            <div id="pwd-error" class="text-[10px] text-danger hidden mb-2">密码错误</div>
+            <div class="flex justify-end gap-2">
+                <button id="pwd-cancel" class="px-3 py-1.5 text-xs text-secondary hover:text-primary">取消</button>
+                <button id="pwd-confirm" class="bg-accent text-white text-xs px-4 py-1.5 rounded-lg">确定</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Main Content -->
     <main class="flex-grow pt-24 pb-20 px-4 w-full max-w-7xl mx-auto flex flex-col gap-8 min-h-[calc(100vh-80px)]">
         
