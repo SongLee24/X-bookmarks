@@ -36,6 +36,13 @@ body.modal-open {
     overflow: hidden !important;
 }
 
+/* 强制推文组件在 Grid 容器中自适应 */
+.twitter-tweet.twitter-tweet-rendered {
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important; /* 移除居中，让它填满格子 */
+}
+
 /* Skeleton Loader for Tweets */
 .tweet-skeleton {
     width: 100%;
